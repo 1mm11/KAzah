@@ -10,21 +10,19 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        /* === СТИЛИ (CSS) === */
         :root {
             --mc-green: #3c8527;
             --kz-blue: #00afca;
             --kz-gold: #fec100;
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
+            --dark-bg: #0d0d0d;
+            --card-bg: #1a1a1a;
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--dark-bg);
             color: white;
-            line-height: 1.6;
         }
 
         /* Шапка */
@@ -32,7 +30,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 5%;
+            padding: 10px 5%;
             background: #000;
             border-bottom: 3px solid var(--kz-gold);
             position: sticky;
@@ -40,24 +38,21 @@
             z-index: 100;
         }
 
-        .logo { font-size: 1.5rem; font-weight: bold; color: var(--kz-blue); }
-        
         nav a {
-            color: #bbb;
+            color: #ccc;
             text-decoration: none;
             margin: 0 15px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
         }
 
-        nav a:hover { color: var(--kz-gold); }
+        nav a:hover { color: var(--kz-blue); }
 
-        /* Окно авторизации */
+        /* Авторизация */
         .auth-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.9);
             display: flex; justify-content: center; align-items: center;
             z-index: 1000;
         }
@@ -66,20 +61,19 @@
             background: var(--card-bg);
             padding: 30px;
             border: 2px solid var(--kz-blue);
-            width: 320px;
+            width: 300px;
             text-align: center;
-            border-radius: 8px;
+            border-radius: 10px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin: 10px 0;
             background: #000;
-            border: 1px solid #444;
+            border: 1px solid #333;
             color: white;
             box-sizing: border-box;
-            border-radius: 4px;
         }
 
         button {
@@ -91,134 +85,95 @@
             border-bottom: 4px solid #255018;
             cursor: pointer;
             font-weight: bold;
-            margin-top: 10px;
         }
 
-        button:active { transform: translateY(2px); border-bottom: 2px solid #255018; }
-
-        .toggle-link { color: var(--kz-blue); cursor: pointer; font-size: 0.9rem; margin-top: 15px; display: block; }
-
-        /* Контент */
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
-        .page { display: none; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
+        .page { display: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
         .card {
             background: var(--card-bg);
             border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #333;
             padding: 15px;
+            border: 1px solid #333;
         }
 
-        .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; }
+        .card img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
 
         .badge-new {
-            background: red;
+            background: #ff4444;
             color: white;
-            padding: 2px 8px;
+            padding: 2px 6px;
             font-size: 0.7rem;
-            border-radius: 10px;
-            margin-left: 8px;
-            text-transform: uppercase;
+            border-radius: 4px;
+            margin-left: 5px;
         }
-
-        .law-item { border-left: 4px solid var(--kz-blue); padding: 10px; background: #252525; margin-bottom: 10px; list-style: none;}
-
-        .admin-section { background: #2a1a00; border: 1px solid var(--kz-gold); padding: 20px; border-radius: 8px; margin-top: 20px;}
     </style>
 </head>
 <body>
 
     <div id="auth-screen" class="auth-overlay">
         <div class="auth-box">
-            <h2 id="auth-title">Вход в Империю</h2>
+            <h2 id="auth-title">Вход</h2>
             <input type="text" id="auth-nick" placeholder="Ник в Minecraft">
             <input type="password" id="auth-pass" placeholder="Пароль">
             <div id="reg-extra" style="display: none;">
                 <input type="password" id="auth-pass-confirm" placeholder="Повторите пароль">
             </div>
             <button onclick="handleAuth()" id="auth-btn">Войти</button>
-            <span class="toggle-link" id="auth-toggle" onclick="toggleAuth()">Нет аккаунта? Регистрация</span>
+            <p style="cursor:pointer; color:var(--kz-blue); font-size:0.8rem; margin-top:15px;" onclick="toggleAuth()">Регистрация</p>
         </div>
     </div>
 
     <header id="header" style="display: none;">
-        <div class="logo">🇰🇿 Империя</div>
+        <div style="font-size:1.2rem; font-weight:bold; color:var(--kz-gold)">🇰🇿 КАЗАХСКАЯ ИМПЕРИЯ</div>
         <nav>
             <a onclick="showPage('news')">Новости</a>
             <a onclick="showPage('shop')">Магазин</a>
-            <a onclick="showPage('votes')">Голосования</a>
             <a onclick="showPage('laws')">Законы</a>
-            <a id="admin-nav" style="display: none; color: var(--kz-gold);" onclick="showPage('admin')">Админ-панель</a>
+            <a id="admin-nav" style="display: none; color:red;" onclick="showPage('admin')">Админка</a>
         </nav>
-        <div>
-            <span id="user-nick" style="margin-right: 15px; color: var(--kz-gold);"></span>
-            <button onclick="logout()" style="width: auto; padding: 5px 10px; background: #444; border-bottom: 2px solid #222;">Выход</button>
-        </div>
+        <div id="user-display" style="font-weight:bold;"></div>
     </header>
 
     <div class="container">
         <section id="p-news" class="page">
-            <h1>Новости сервера</h1>
+            <h1>Новости</h1>
             <div id="news-list" class="grid"></div>
         </section>
 
         <section id="p-shop" class="page">
-            <h1>Рынок ресурсов</h1>
+            <h1>Рынок</h1>
             <div id="shop-list" class="grid"></div>
         </section>
 
         <section id="p-laws" class="page">
-            <h1>Конституция Империи</h1>
-            <div id="laws-container">
-                <h3>🏗️ Строительство</h3> <ul id="list-build"></ul>
-                <h3>⚔️ PvP и Войны</h3> <ul id="list-pvp"></ul>
-                <h3>💰 Экономика</h3> <ul id="list-eco"></ul>
-            </div>
-        </section>
-
-        <section id="p-votes" class="page">
-            <h1>Голосования</h1>
-            <div id="votes-list"></div>
+            <h1>Законы</h1>
+            <div id="laws-content"></div>
         </section>
 
         <section id="p-admin" class="page">
             <h1>Панель управления</h1>
-            <div class="admin-section">
+            <div class="card">
                 <h3>Добавить новость</h3>
-                <input type="text" id="adm-news-title" placeholder="Заголовок">
-                <input type="text" id="adm-news-img" placeholder="Ссылка на картинку">
-                <textarea id="adm-news-text" style="width:100%; height:80px; background:#000; color:white;" placeholder="Текст новости"></textarea>
-                <button onclick="publishNews()">Опубликовать новость</button>
-            </div>
-            <div class="admin-section">
-                <h3>Добавить закон</h3>
-                <select id="adm-law-cat" style="width:100%; padding:10px; margin-bottom:10px; background:#000; color:white;">
-                    <option value="build">Строительство</option>
-                    <option value="pvp">PvP</option>
-                    <option value="eco">Экономика</option>
-                </select>
-                <input type="text" id="adm-law-text" placeholder="Текст закона">
-                <button onclick="publishLaw()">Добавить закон</button>
+                <input type="text" id="adm-n-title" placeholder="Заголовок">
+                <input type="text" id="adm-n-img" placeholder="URL картинки">
+                <textarea id="adm-n-text" style="width:100%; background:#000; color:white; border:1px solid #333;" placeholder="Текст новости"></textarea>
+                <button onclick="addNews()">Опубликовать</button>
             </div>
         </section>
     </div>
 
     <script>
-        // === ЛОГИКА (JavaScript) ===
-
-        // ТВОИ ДАННЫЕ FIREBASE
+        // ДАННЫЕ ИЗ ТВОЕГО СООБЩЕНИЯ
         const firebaseConfig = {
-            apiKey: "AIzaSyOsoXWRUKx-IqaYLrBhHurqj9Dn5yiPBNU",
+            apiKey: "AIzaSyDsoXWRUKx-IqaYlrBhHurqj9On5yiPBNU",
             authDomain: "blumket-546e8.firebaseapp.com",
             databaseURL: "https://blumket-546e8-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "blumket-546e8",
             storageBucket: "blumket-546e8.firebasestorage.app",
             messagingSenderId: "333332861402",
-            appId: "1:333332861402:web:2b13848d59f141c7ebb0e3"
+            appId: "1:333332861402:web:2b13048d59f141c7ebb0e3"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -226,67 +181,52 @@
         const db = firebase.firestore();
 
         let isReg = false;
-        let userData = null;
 
-        // Переключение Вход/Регистрация
         function toggleAuth() {
             isReg = !isReg;
-            document.getElementById('auth-title').innerText = isReg ? 'Регистрация' : 'Вход в Империю';
+            document.getElementById('auth-title').innerText = isReg ? 'Регистрация' : 'Вход';
             document.getElementById('reg-extra').style.display = isReg ? 'block' : 'none';
-            document.getElementById('auth-btn').innerText = isReg ? 'Зарегистрироваться' : 'Войти';
-            document.getElementById('auth-toggle').innerText = isReg ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Регистрация';
+            document.getElementById('auth-btn').innerText = isReg ? 'Создать аккаунт' : 'Войти';
         }
 
-        // Авторизация
         async function handleAuth() {
             const nick = document.getElementById('auth-nick').value;
             const pass = document.getElementById('auth-pass').value;
-            const email = `${nick}@server.com`;
+            const email = `${nick}@kazakh.empire`;
 
             try {
                 if (isReg) {
                     const res = await auth.createUserWithEmailAndPassword(email, pass);
                     await db.collection('users').doc(res.user.uid).set({
                         nickname: nick,
-                        role: nick === '1mm' ? 'admin' : 'player'
+                        isAdmin: nick === '1mm'
                     });
                 } else {
                     await auth.signInWithEmailAndPassword(email, pass);
                 }
-            } catch (e) { alert("Ошибка: " + e.message); }
+            } catch (e) { alert("Ошибка Firebase: " + e.message); }
         }
 
-        // Выход
-        function logout() { auth.signOut(); location.reload(); }
-
-        // Следим за пользователем
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 const doc = await db.collection('users').doc(user.uid).get();
-                userData = doc.data();
+                const data = doc.data();
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('header').style.display = 'flex';
-                document.getElementById('user-nick').innerText = userData.nickname;
-                
-                if (userData.nickname === '1mm' || userData.role === 'admin') {
-                    document.getElementById('admin-nav').style.display = 'inline';
-                }
+                document.getElementById('user-display').innerText = data.nickname;
+                if (data.isAdmin) document.getElementById('admin-nav').style.display = 'inline';
                 showPage('news');
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
             }
         });
 
-        // Навигация
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById('p-' + id).style.display = 'block';
-            if (id === 'news') loadNews();
-            if (id === 'laws') loadLaws();
-            if (id === 'shop') loadShop();
+            if(id === 'news') loadNews();
         }
 
-        // Загрузка новостей
         async function loadNews() {
             const list = document.getElementById('news-list');
             list.innerHTML = 'Загрузка...';
@@ -294,58 +234,22 @@
             list.innerHTML = '';
             snap.forEach(doc => {
                 const n = doc.data();
-                list.innerHTML += `
-                    <div class="card">
-                        <img src="${n.img || 'https://via.placeholder.com/300x150'}">
-                        <h3>${n.title}</h3>
-                        <p>${n.text}</p>
-                        <small>${n.date.toDate().toLocaleDateString()}</small>
-                    </div>
-                `;
+                list.innerHTML += `<div class="card">
+                    <img src="${n.img}">
+                    <h3>${n.title}</h3>
+                    <p>${n.text}</p>
+                </div>`;
             });
         }
 
-        // Админка: Публикация новости
-        async function publishNews() {
-            const title = document.getElementById('adm-news-title').value;
-            const img = document.getElementById('adm-news-img').value;
-            const text = document.getElementById('adm-news-text').value;
+        async function addNews() {
+            const title = document.getElementById('adm-n-title').value;
+            const img = document.getElementById('adm-n-img').value;
+            const text = document.getElementById('adm-n-text').value;
             await db.collection('news').add({ title, img, text, date: new Date() });
-            alert("Новость добавлена!");
+            alert("Готово!");
             showPage('news');
         }
-
-        // Загрузка законов
-        async function loadLaws() {
-            const cats = ['build', 'pvp', 'eco'];
-            cats.forEach(c => document.getElementById('list-' + c).innerHTML = '');
-            const snap = await db.collection('laws').get();
-            const now = Date.now();
-
-            snap.forEach(doc => {
-                const l = doc.data();
-                const isNew = (now - l.date.toMillis()) < (3 * 24 * 60 * 60 * 1000); // 3 дня
-                const item = `<li class="law-item">${l.text} ${isNew ? '<span class="badge-new">НОВОЕ</span>' : ''}</li>`;
-                document.getElementById('list-' + l.category).innerHTML += item;
-            });
-        }
-
-        // Админка: Добавить закон
-        async function publishLaw() {
-            const text = document.getElementById('adm-law-text').value;
-            const category = document.getElementById('adm-law-cat').value;
-            await db.collection('laws').add({ text, category, date: new Date() });
-            alert("Закон принят!");
-            loadLaws();
-        }
-
-        // Магазин (пример)
-        async function loadShop() {
-            const list = document.getElementById('shop-list');
-            list.innerHTML = '<p>Пока товаров нет. Станьте первым!</p>';
-            // Здесь будет логика загрузки из коллекции 'shop'
-        }
-
     </script>
 </body>
 </html>
