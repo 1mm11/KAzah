@@ -3,253 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Казахская Империя | Minecraft Server</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
+    <title>Казахская Империя</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --mc-green: #3c8527;
-            --kz-blue: #00afca;
-            --kz-gold: #fec100;
-            --dark-bg: #0d0d0d;
-            --card-bg: #1a1a1a;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--dark-bg);
-            color: white;
-        }
-
-        /* Шапка */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 5%;
-            background: #000;
-            border-bottom: 3px solid var(--kz-gold);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        nav a {
-            color: #ccc;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        nav a:hover { color: var(--kz-blue); }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: #fff; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        input, button { padding: 10px; margin: 5px 0; border-radius: 5px; border: none; }
+        button { background-color: #f39c12; color: #fff; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #e67e22; }
+        
         /* Авторизация */
-        .auth-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1000;
-        }
+        #auth-section { display: flex; flex-direction: column; width: 300px; margin: 100px auto; background: #2c3e50; padding: 20px; border-radius: 10px; }
+        
+        /* Главное приложение */
+        #app-section { display: none; }
+        .nav { display: flex; gap: 10px; background: #2c3e50; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+        .nav button { background: transparent; color: white; border: 1px solid #f39c12; }
+        .nav button.active, .nav button:hover { background: #f39c12; }
+        
+        .tab-content { display: none; background: #2c3e50; padding: 20px; border-radius: 5px; min-height: 300px; }
+        .tab-content.active { display: block; }
+        
+        #admin-tab-btn { display: none; background: #c0392b; border-color: #c0392b; }
+        #admin-tab-btn:hover { background: #e74c3c; }
 
-        .auth-box {
-            background: var(--card-bg);
-            padding: 30px;
-            border: 2px solid var(--kz-blue);
-            width: 300px;
-            text-align: center;
-            border-radius: 10px;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            background: #000;
-            border: 1px solid #333;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: var(--mc-green);
-            color: white;
-            border: none;
-            border-bottom: 4px solid #255018;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
-        .page { display: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #333;
-        }
-
-        .card img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
-
-        .badge-new {
-            background: #ff4444;
-            color: white;
-            padding: 2px 6px;
-            font-size: 0.7rem;
-            border-radius: 4px;
-            margin-left: 5px;
-        }
+        .chat-box { height: 200px; background: #1a1a1a; padding: 10px; overflow-y: scroll; margin-bottom: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen" class="auth-overlay">
-        <div class="auth-box">
-            <h2 id="auth-title">Вход</h2>
-            <input type="text" id="auth-nick" placeholder="Ник в Minecraft">
-            <input type="password" id="auth-pass" placeholder="Пароль">
-            <div id="reg-extra" style="display: none;">
-                <input type="password" id="auth-pass-confirm" placeholder="Повторите пароль">
-            </div>
-            <button onclick="handleAuth()" id="auth-btn">Войти</button>
-            <p style="cursor:pointer; color:var(--kz-blue); font-size:0.8rem; margin-top:15px;" onclick="toggleAuth()">Регистрация</p>
+<div class="container">
+    <div id="auth-section">
+        <h2>Вход в Империю</h2>
+        <input type="text" id="username" placeholder="Ник в Minecraft">
+        <input type="password" id="password" placeholder="Пароль">
+        <button id="login-btn">Войти</button>
+        <button id="register-btn">Зарегистрироваться</button>
+        <p id="auth-error" style="color: #e74c3c; font-size: 14px;"></p>
+    </div>
+
+    <div id="app-section">
+        <div class="nav">
+            <button onclick="showTab('news')" class="active">Новости</button>
+            <button onclick="showTab('bitcoin')">Биткоин</button>
+            <button onclick="showTab('voting')">Голосования</button>
+            <button onclick="showTab('chat')">Чат</button>
+            <button id="admin-tab-btn" onclick="showTab('admin')">Админ-Панель</button>
+            <button onclick="logout()" style="margin-left: auto; border-color: transparent;">Выход</button>
+        </div>
+
+        <div id="news" class="tab-content active">
+            <h2>Новости Империи</h2>
+            <div id="news-container">Тут будут новости от админов...</div>
+        </div>
+
+        <div id="bitcoin" class="tab-content">
+            <h2>График Биткоина (Имперская биржа)</h2>
+            <p>Ваш баланс: <span id="user-balance">0</span> монет</p>
+            <canvas id="btcChart" width="400" height="200"></canvas>
+        </div>
+
+        <div id="voting" class="tab-content">
+            <h2>Голосования</h2>
+            <div id="votes-container">Тут будут опросы...</div>
+        </div>
+
+        <div id="chat" class="tab-content">
+            <h2>Общий чат</h2>
+            <div class="chat-box" id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Введите сообщение..." style="width: 70%;">
+            <button id="send-chat">Отправить</button>
+        </div>
+
+        <div id="admin" class="tab-content">
+            <h2>Панель Администратора</h2>
+            <p>Управление экономикой и новостями</p>
+            <button onclick="alert('Функция добавления новостей в разработке')">Опубликовать новость</button>
+            <br><br>
+            <input type="number" id="btc-manipulate" placeholder="Новая цена биткоина">
+            <button onclick="alert('Функция смены курса в разработке')">Установить курс</button>
+            <br><br>
+            <input type="text" id="give-coins-user" placeholder="Ник игрока">
+            <input type="number" id="give-coins-amount" placeholder="Кол-во монет">
+            <button onclick="alert('Функция выдачи монет в разработке')">Выдать монеты</button>
         </div>
     </div>
+</div>
 
-    <header id="header" style="display: none;">
-        <div style="font-size:1.2rem; font-weight:bold; color:var(--kz-gold)">🇰🇿 КАЗАХСКАЯ ИМПЕРИЯ</div>
-        <nav>
-            <a onclick="showPage('news')">Новости</a>
-            <a onclick="showPage('shop')">Магазин</a>
-            <a onclick="showPage('laws')">Законы</a>
-            <a id="admin-nav" style="display: none; color:red;" onclick="showPage('admin')">Админка</a>
-        </nav>
-        <div id="user-display" style="font-weight:bold;"></div>
-    </header>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-    <div class="container">
-        <section id="p-news" class="page">
-            <h1>Новости</h1>
-            <div id="news-list" class="grid"></div>
-        </section>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDsoXWRUKx-IqaYlrBhHurqj9On5yiPBNU",
+      authDomain: "blumket-546e8.firebaseapp.com",
+      databaseURL: "https://blumket-546e8-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "blumket-546e8",
+      storageBucket: "blumket-546e8.firebasestorage.app",
+      messagingSenderId: "333332861402",
+      appId: "1:333332861402:web:2b13048d59f141c7ebb0e3"
+    };
 
-        <section id="p-shop" class="page">
-            <h1>Рынок</h1>
-            <div id="shop-list" class="grid"></div>
-        </section>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        <section id="p-laws" class="page">
-            <h1>Законы</h1>
-            <div id="laws-content"></div>
-        </section>
+    let currentUser = null;
 
-        <section id="p-admin" class="page">
-            <h1>Панель управления</h1>
-            <div class="card">
-                <h3>Добавить новость</h3>
-                <input type="text" id="adm-n-title" placeholder="Заголовок">
-                <input type="text" id="adm-n-img" placeholder="URL картинки">
-                <textarea id="adm-n-text" style="width:100%; background:#000; color:white; border:1px solid #333;" placeholder="Текст новости"></textarea>
-                <button onclick="addNews()">Опубликовать</button>
-            </div>
-        </section>
-    </div>
+    // --- ЛОГИКА АВТОРИЗАЦИИ ---
+    document.getElementById('register-btn').addEventListener('click', async () => {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        const err = document.getElementById('auth-error');
+        
+        if(!user || !pass) return err.innerText = "Введите ник и пароль!";
 
-    <script>
-        // ДАННЫЕ ИЗ ТВОЕГО СООБЩЕНИЯ
-        const firebaseConfig = {
-            apiKey: "AIzaSyDsoXWRUKx-IqaYlrBhHurqj9On5yiPBNU",
-            authDomain: "blumket-546e8.firebaseapp.com",
-            databaseURL: "https://blumket-546e8-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "blumket-546e8",
-            storageBucket: "blumket-546e8.firebasestorage.app",
-            messagingSenderId: "333332861402",
-            appId: "1:333332861402:web:2b13048d59f141c7ebb0e3"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        let isReg = false;
-
-        function toggleAuth() {
-            isReg = !isReg;
-            document.getElementById('auth-title').innerText = isReg ? 'Регистрация' : 'Вход';
-            document.getElementById('reg-extra').style.display = isReg ? 'block' : 'none';
-            document.getElementById('auth-btn').innerText = isReg ? 'Создать аккаунт' : 'Войти';
-        }
-
-        async function handleAuth() {
-            const nick = document.getElementById('auth-nick').value;
-            const pass = document.getElementById('auth-pass').value;
-            const email = `${nick}@kazakh.empire`;
-
-            try {
-                if (isReg) {
-                    const res = await auth.createUserWithEmailAndPassword(email, pass);
-                    await db.collection('users').doc(res.user.uid).set({
-                        nickname: nick,
-                        isAdmin: nick === '1mm'
-                    });
-                } else {
-                    await auth.signInWithEmailAndPassword(email, pass);
-                }
-            } catch (e) { alert("Ошибка Firebase: " + e.message); }
-        }
-
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                const doc = await db.collection('users').doc(user.uid).get();
-                const data = doc.data();
-                document.getElementById('auth-screen').style.display = 'none';
-                document.getElementById('header').style.display = 'flex';
-                document.getElementById('user-display').innerText = data.nickname;
-                if (data.isAdmin) document.getElementById('admin-nav').style.display = 'inline';
-                showPage('news');
-            } else {
-                document.getElementById('auth-screen').style.display = 'flex';
-            }
-        });
-
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById('p-' + id).style.display = 'block';
-            if(id === 'news') loadNews();
-        }
-
-        async function loadNews() {
-            const list = document.getElementById('news-list');
-            list.innerHTML = 'Загрузка...';
-            const snap = await db.collection('news').orderBy('date', 'desc').get();
-            list.innerHTML = '';
-            snap.forEach(doc => {
-                const n = doc.data();
-                list.innerHTML += `<div class="card">
-                    <img src="${n.img}">
-                    <h3>${n.title}</h3>
-                    <p>${n.text}</p>
-                </div>`;
+        const dbRef = ref(db);
+        const snapshot = await get(child(dbRef, `users/${user}`));
+        
+        if (snapshot.exists()) {
+            err.innerText = "Такой ник уже занят!";
+        } else {
+            // Выдаем права админа, если ник 1mm
+            const isAdmin = (user === '1mm'); 
+            await set(ref(db, 'users/' + user), {
+                password: pass,
+                role: isAdmin ? 'admin' : 'player',
+                balance: 0
             });
+            alert("Регистрация успешна! Теперь войдите.");
         }
+    });
 
-        async function addNews() {
-            const title = document.getElementById('adm-n-title').value;
-            const img = document.getElementById('adm-n-img').value;
-            const text = document.getElementById('adm-n-text').value;
-            await db.collection('news').add({ title, img, text, date: new Date() });
-            alert("Готово!");
-            showPage('news');
+    document.getElementById('login-btn').addEventListener('click', async () => {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        const err = document.getElementById('auth-error');
+
+        if(!user || !pass) return err.innerText = "Введите ник и пароль!";
+
+        const dbRef = ref(db);
+        const snapshot = await get(child(dbRef, `users/${user}`));
+
+        if (snapshot.exists() && snapshot.val().password === pass) {
+            currentUser = { username: user, ...snapshot.val() };
+            loginSuccess();
+        } else {
+            err.innerText = "Неверный ник или пароль!";
         }
-    </script>
+    });
+
+    function loginSuccess() {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('app-section').style.display = 'block';
+        document.getElementById('user-balance').innerText = currentUser.balance;
+
+        if (currentUser.role === 'admin') {
+            document.getElementById('admin-tab-btn').style.display = 'inline-block';
+        }
+        initChart(); // Запускаем график биткоина
+    }
+
+    window.logout = function() {
+        currentUser = null;
+        document.getElementById('auth-section').style.display = 'flex';
+        document.getElementById('app-section').style.display = 'none';
+        document.getElementById('admin-tab-btn').style.display = 'none';
+    }
+
+    // --- ЛОГИКА ВКЛАДОК ---
+    window.showTab = function(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    // --- ДЕМО ГРАФИКА БИТКОИНА ---
+    let btcChartInstance = null;
+    function initChart() {
+        if(btcChartInstance) return;
+        const ctx = document.getElementById('btcChart').getContext('2d');
+        btcChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['10:00', '11:00', '12:00', '13:00', '14:00', 'Сейчас'],
+                datasets: [{
+                    label: 'Курс B-Coin',
+                    data: [100, 105, 98, 110, 108, 115],
+                    borderColor: '#f39c12',
+                    tension: 0.1
+                }]
+            },
+            options: { scales: { y: { beginAtZero: false } } }
+        });
+    }
+</script>
 </body>
 </html>
