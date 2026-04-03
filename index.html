@@ -3,63 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Германская империя</title>
+    <title>Германская империя 1mm Наш император </title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0d0d0d;
             --surface: #1a1a1a;
-            --primary: #8b0000; /* Темно-красный/бордовый */
+            --primary: #8b0000;
             --gold: #d4af37;
             --text-main: #f5f5f5;
             --text-muted: #a0a0a0;
+            --danger: #c0392b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-        }
-
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; }
         h1, h2, h3, .brand { font-family: 'Cinzel', serif; }
 
-        /* Шапка сайта */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 50px;
-            background-color: var(--surface);
-            border-bottom: 2px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 50px; background-color: var(--surface);
+            border-bottom: 2px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .brand { font-size: 28px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
 
         .auth-buttons button {
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--gold);
-            padding: 8px 20px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-family: 'Roboto', sans-serif;
-            transition: all 0.3s;
-            border-radius: 3px;
+            background: transparent; color: var(--text-main); border: 1px solid var(--gold);
+            padding: 8px 20px; margin-left: 10px; cursor: pointer; transition: all 0.3s; border-radius: 3px;
         }
 
-        .auth-buttons button:hover, .btn-primary {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
+        .auth-buttons button:hover, .btn-primary { background: var(--primary); border-color: var(--primary); color: white; }
         .btn-primary { padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; }
 
-        /* Основной контент */
         main { padding: 40px 50px; max-width: 1200px; margin: 0 auto; }
 
         .search-bar {
@@ -67,94 +43,85 @@
             background: var(--surface); border: 1px solid #333;
             color: white; border-radius: 5px; font-size: 16px;
         }
-        .search-bar:focus { outline: none; border-color: var(--gold); }
 
-        /* Сетка граждан */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
 
         .card {
             background: var(--surface); border: 1px solid #2a2a2a;
-            border-radius: 8px; overflow: hidden; transition: transform 0.3s;
+            border-radius: 8px; overflow: hidden; position: relative;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--gold); }
         .card img { width: 100%; height: 250px; object-fit: cover; border-bottom: 2px solid var(--primary); }
         .card-info { padding: 15px; }
-        .card-info h3 { margin-bottom: 5px; color: var(--gold); }
-        .card-info p { color: var(--text-muted); font-size: 14px; }
+        .card-info h3 { color: var(--gold); }
 
-        /* Модальные окна */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
-            justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-content {
-            background: var(--surface); padding: 30px; border-radius: 8px;
-            width: 400px; border: 1px solid var(--gold); position: relative;
-        }
-        .modal-content h2 { color: var(--gold); margin-bottom: 20px; text-align: center; }
-        .modal-content input, .modal-content input[type="file"] {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            background: #111; border: 1px solid #444; color: white; border-radius: 4px;
-        }
-        .close-btn { position: absolute; top: 10px; right: 15px; cursor: pointer; color: var(--text-muted); font-size: 20px; }
+        /* Админские элементы */
+        #admin-section { display: none; margin-bottom: 50px; padding: 25px; border: 1px solid var(--gold); background: #151515; border-radius: 8px; }
+        .admin-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 30px; }
+        .admin-form input { padding: 10px; background: #000; border: 1px solid #444; color: white; }
         
-        /* Админ панель */
-        #admin-panel { display: none; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; }
-        .request-card { background: var(--surface); padding: 15px; margin-bottom: 10px; border-left: 4px solid var(--gold); display: flex; justify-content: space-between; align-items: center;}
-        .request-actions button { margin-left: 10px; padding: 5px 10px; cursor: pointer;}
-        .btn-approve { background: #27ae60; color: white; border: none; }
-        .btn-download { background: var(--gold); color: black; border: none; text-decoration: none; font-size: 13px; padding: 5px 10px; display: inline-block;}
+        .request-card { background: #222; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--gold); }
+        .btn-delete { background: var(--danger); color: white; border: none; padding: 5px 10px; cursor: pointer; margin-top: 10px; width: 100%; }
+        .btn-approve { background: #27ae60; color: white; border: none; padding: 8px 15px; cursor: pointer; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--surface); padding: 30px; width: 400px; border: 1px solid var(--gold); border-radius: 8px; }
+        .modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #444; color: white; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="brand">Германская империя</div>
-        <div class="auth-buttons" id="auth-ui">
+        <div id="auth-ui" class="auth-buttons">
             <button onclick="openModal('login-modal')">Войти</button>
             <button onclick="openModal('register-modal')" class="btn-primary">Регистрация</button>
         </div>
-        <div class="auth-buttons" id="user-ui" style="display: none;">
-            <span id="user-greeting" style="margin-right: 15px; color: var(--gold);"></span>
-            <button onclick="logoutUser()">Выйти</button>
+        <div id="user-ui" class="auth-buttons" style="display: none;">
+            <span id="user-greeting" style="color: var(--gold); margin-right: 15px;"></span>
+            <button onclick="logout()">Выйти</button>
         </div>
     </header>
 
     <main>
-        <input type="text" id="search-input" class="search-bar" placeholder="Поиск по имени или ID коду (например: 827)..." onkeyup="filterCitizens()">
-        
-        <h2 style="margin-bottom: 20px; color: var(--text-muted);">Список граждан</h2>
-        <div class="grid" id="citizens-grid">
+        <div id="admin-section">
+            <h2 style="color: var(--gold); margin-bottom: 20px;">Панель Управления Империей</h2>
+            
+            <h3>Быстрое добавление гражданина</h3>
+            <div class="admin-form">
+                <input type="text" id="manual-name" placeholder="Имя">
+                <input type="text" id="manual-id" placeholder="ID Код">
+                <input type="text" id="manual-photo" placeholder="Ссылка на фото (URL)">
+                <button class="btn-primary" onclick="manualAdd()">Добавить</button>
             </div>
 
-        <div id="admin-panel">
-            <h2 style="color: var(--gold); margin-bottom: 20px;">Имперская Канцелярия (Админ-панель)</h2>
-            <div id="requests-list">
-                </div>
+            <h3>Заявки на вступление</h3>
+            <div id="requests-list" style="margin-bottom: 30px;"></div>
         </div>
+
+        <input type="text" id="search" class="search-bar" placeholder="Поиск по имени или номеру..." onkeyup="filter()">
+        <h2 style="margin-bottom: 20px;">Реестр Жителей</h2>
+        <div class="grid" id="main-grid"></div>
     </main>
 
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('login-modal')">&times;</span>
             <h2>Вход</h2>
-            <input type="text" id="login-username" placeholder="Никнейм (например: 1mm)">
-            <input type="password" id="login-password" placeholder="Пароль">
-            <button class="btn-primary" style="width: 100%;" onclick="loginUser()">Войти</button>
+            <input type="text" id="log-user" placeholder="Никнейм">
+            <input type="password" id="log-pass" placeholder="Пароль">
+            <button class="btn-primary" style="width:100%" onclick="login()">Войти</button>
+            <button onclick="closeModal('login-modal')" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Отмена</button>
         </div>
     </div>
 
     <div id="register-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('register-modal')">&times;</span>
             <h2>Регистрация</h2>
-            <input type="text" id="reg-username" placeholder="Никнейм (Имя)">
-            <input type="text" id="reg-id" placeholder="Идентификационный код (напр. 827)">
-            <input type="password" id="reg-password" placeholder="Пароль">
-            <label style="color: var(--text-muted); font-size: 12px; margin-bottom: 5px; display: block;">Загрузите ваше фото:</label>
-            <input type="file" id="reg-photo" accept="image/*">
-            <button class="btn-primary" style="width: 100%;" onclick="registerUser()">Подать заявку</button>
+            <input type="text" id="reg-user" placeholder="Никнейм">
+            <input type="text" id="reg-id" placeholder="ID Код">
+            <input type="password" id="reg-pass" placeholder="Пароль">
+            <input type="file" id="reg-file">
+            <button class="btn-primary" style="width:100%" onclick="register()">Отправить заявку</button>
+            <button onclick="closeModal('register-modal')" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Отмена</button>
         </div>
     </div>
 
@@ -164,7 +131,6 @@
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-        // Ваша конфигурация
         const firebaseConfig = {
             apiKey: "AIzaSyBTzzWYiqJq6UUhLNlGXfaeraqdy5vYb-E",
             authDomain: "ssss-e4774.firebaseapp.com",
@@ -180,173 +146,104 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // Глобальные переменные
-        window.isAdmin = false;
-        let citizensData = [];
+        let allCitizens = [];
+        const getEmail = (u) => `${u.toLowerCase()}@empire.local`;
 
-        // UI Функции
         window.openModal = (id) => document.getElementById(id).style.display = 'flex';
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-        // Имитация входа по нику (Firebase Auth требует email, поэтому мы подставляем фейковый домен)
-        const getEmail = (username) => `${username.toLowerCase()}@empire.local`;
-
         // Авторизация
-        window.loginUser = async () => {
-            const user = document.getElementById('login-username').value;
-            const pass = document.getElementById('login-password').value;
+        window.login = async () => {
             try {
-                await signInWithEmailAndPassword(auth, getEmail(user), pass);
+                await signInWithEmailAndPassword(auth, getEmail(document.getElementById('log-user').value), document.getElementById('log-pass').value);
                 closeModal('login-modal');
-                alert("Успешный вход!");
-            } catch (error) {
-                alert("Ошибка входа. Проверьте данные.");
-            }
+            } catch (e) { alert("Ошибка входа!"); }
         };
 
-        // Выход
-        window.logoutUser = () => signOut(auth);
+        window.logout = () => signOut(auth);
 
-        // Регистрация
-        window.registerUser = async () => {
-            const username = document.getElementById('reg-username').value;
-            const idCode = document.getElementById('reg-id').value;
-            const pass = document.getElementById('reg-password').value;
-            const photoFile = document.getElementById('reg-photo').files[0];
+        window.register = async () => {
+            const user = document.getElementById('reg-user').value;
+            const id = document.getElementById('reg-id').value;
+            const pass = document.getElementById('reg-pass').value;
+            const file = document.getElementById('reg-file').files[0];
 
-            if(!username || !pass) return alert("Заполните никнейм и пароль!");
-
-            try {
-                // Если регается админ 1mm, ему не нужно фото и одобрение
-                if(username.toLowerCase() === "1mm") {
-                    await createUserWithEmailAndPassword(auth, getEmail(username), pass);
-                    alert("Администратор зарегистрирован!");
-                    closeModal('register-modal');
-                    return;
-                }
-
-                // Обычный пользователь
-                if(!idCode || !photoFile) return alert("Гражданам необходимо заполнить ID и загрузить фото!");
-                
-                // 1. Создаем аккаунт
-                await createUserWithEmailAndPassword(auth, getEmail(username), pass);
-                
-                // 2. Загружаем фото в Storage
-                const storageRef = ref(storage, `photos/${Date.now()}_${photoFile.name}`);
-                await uploadBytes(storageRef, photoFile);
-                const photoUrl = await getDownloadURL(storageRef);
-
-                // 3. Отправляем заявку в базу (ожидает админа)
-                await addDoc(collection(db, "pending_requests"), {
-                    name: username,
-                    idCode: idCode,
-                    photoUrl: photoUrl
-                });
-
-                alert("Заявка отправлена! Ожидайте подтверждения администратором 1mm.");
-                closeModal('register-modal');
-                signOut(auth); // Выходим, так как аккаунт еще не подтвержден для просмотра как гражданин
-
-            } catch (error) {
-                alert("Ошибка регистрации: " + error.message);
+            if (user.toLowerCase() === '1mm') {
+                await createUserWithEmailAndPassword(auth, getEmail(user), pass);
+                alert("Админ создан!"); closeModal('register-modal'); return;
             }
+
+            const sRef = ref(storage, `pics/${Date.now()}`);
+            await uploadBytes(sRef, file);
+            const url = await getDownloadURL(sRef);
+
+            await addDoc(collection(db, "pending_requests"), { name: user, idCode: id, photoUrl: url });
+            alert("Заявка ушла!"); closeModal('register-modal');
         };
 
-        // Отслеживание состояния пользователя
+        // Админские действия
+        window.manualAdd = async () => {
+            const name = document.getElementById('manual-name').value;
+            const id = document.getElementById('manual-id').value;
+            const url = document.getElementById('manual-photo').value;
+            await addDoc(collection(db, "citizens"), { name, idCode: id, photoUrl: url });
+            alert("Добавлен!");
+        };
+
+        window.approve = async (dId, name, idCode, photoUrl) => {
+            await addDoc(collection(db, "citizens"), { name, idCode, photoUrl });
+            await deleteDoc(doc(db, "pending_requests", dId));
+        };
+
+        window.removeCitizen = async (id) => {
+            if(confirm("Удалить жителя?")) await deleteDoc(doc(db, "citizens", id));
+        };
+
+        // Слушатели данных
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('auth-ui').style.display = 'none';
-                document.getElementById('user-ui').style.display = 'flex';
-                const username = user.email.split('@')[0];
-                document.getElementById('user-greeting').innerText = `Приветствую, ${username}`;
-                
-                // Проверка на админа
-                if(username === "1mm") {
-                    window.isAdmin = true;
-                    document.getElementById('admin-panel').style.display = 'block';
-                    loadAdminRequests();
-                }
-            } else {
-                document.getElementById('auth-ui').style.display = 'flex';
-                document.getElementById('user-ui').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'none';
-                window.isAdmin = false;
-            }
+            const is1mm = user && user.email.startsWith('1mm@');
+            document.getElementById('auth-ui').style.display = user ? 'none' : 'flex';
+            document.getElementById('user-ui').style.display = user ? 'flex' : 'none';
+            document.getElementById('admin-section').style.display = is1mm ? 'block' : 'none';
+            if(user) document.getElementById('user-greeting').innerText = user.email.split('@')[0];
+            
+            window.isCurrentAdmin = is1mm;
+            renderMain(); 
         });
 
-        // Загрузка подтвержденных граждан (публичный список)
-        const loadCitizens = () => {
-            onSnapshot(collection(db, "citizens"), (snapshot) => {
-                citizensData = [];
-                snapshot.forEach((doc) => citizensData.push({ id: doc.id, ...doc.data() }));
-                renderCitizens(citizensData);
-            });
-        };
+        onSnapshot(collection(db, "citizens"), (s) => {
+            allCitizens = s.docs.map(d => ({id: d.id, ...d.data()}));
+            renderMain();
+        });
 
-        const renderCitizens = (data) => {
-            const grid = document.getElementById('citizens-grid');
-            grid.innerHTML = '';
-            data.forEach(citizen => {
-                grid.innerHTML += `
-                    <div class="card">
-                        <img src="${citizen.photoUrl}" alt="Фото">
-                        <div class="card-info">
-                            <h3>${citizen.name}</h3>
-                            <p>ID Код: <strong>${citizen.idCode}</strong></p>
-                        </div>
+        onSnapshot(collection(db, "pending_requests"), (s) => {
+            const list = document.getElementById('requests-list');
+            list.innerHTML = s.docs.map(d => `
+                <div class="request-card">
+                    <span>${d.data().name} (${d.data().idCode})</span>
+                    <button class="btn-approve" onclick="approve('${d.id}','${d.data().name}','${d.data().idCode}','${d.data().photoUrl}')">Одобрить</button>
+                </div>
+            `).join('');
+        });
+
+        function renderMain(data = allCitizens) {
+            const grid = document.getElementById('main-grid');
+            grid.innerHTML = data.map(c => `
+                <div class="card">
+                    <img src="${c.photoUrl}">
+                    <div class="card-info">
+                        <h3>${c.name}</h3>
+                        <p>ID: ${c.idCode}</p>
+                        ${window.isCurrentAdmin ? `<button class="btn-delete" onclick="removeCitizen('${c.id}')">Удалить</button>` : ''}
                     </div>
-                `;
-            });
+                </div>
+            `).join('');
+        }
+
+        window.filter = () => {
+            const q = document.getElementById('search').value.toLowerCase();
+            renderMain(allCitizens.filter(c => c.name.toLowerCase().includes(q) || c.idCode.includes(q)));
         };
-
-        // Поиск (фильтрация)
-        window.filterCitizens = () => {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = citizensData.filter(c => 
-                c.name.toLowerCase().includes(query) || c.idCode.includes(query)
-            );
-            renderCitizens(filtered);
-        };
-
-        // Админ: Загрузка заявок
-        const loadAdminRequests = () => {
-            onSnapshot(collection(db, "pending_requests"), (snapshot) => {
-                const list = document.getElementById('requests-list');
-                list.innerHTML = '';
-                if(snapshot.empty) list.innerHTML = '<p style="color:#aaa;">Нет новых заявок.</p>';
-                
-                snapshot.forEach((docSnap) => {
-                    const req = docSnap.data();
-                    list.innerHTML += `
-                        <div class="request-card">
-                            <div>
-                                <strong>${req.name}</strong> (ID: ${req.idCode})
-                            </div>
-                            <div class="request-actions">
-                                <a href="${req.photoUrl}" target="_blank" download class="btn-download">Скачать фото</a>
-                                <button class="btn-approve" onclick="approveUser('${docSnap.id}', '${req.name}', '${req.idCode}', '${req.photoUrl}')">Одобрить</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        };
-
-        // Админ: Подтверждение пользователя
-        window.approveUser = async (docId, name, idCode, photoUrl) => {
-            try {
-                // Добавляем в публичный список
-                await addDoc(collection(db, "citizens"), { name, idCode, photoUrl });
-                // Удаляем из заявок
-                await deleteDoc(doc(db, "pending_requests", docId));
-            } catch (error) {
-                alert("Ошибка: " + error.message);
-            }
-        };
-
-        // Инициализация при загрузке
-        loadCitizens();
-
     </script>
 </body>
 </html>
