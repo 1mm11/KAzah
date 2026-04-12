@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Германская империя 1mm Наш император </title>
+    <title>Германская империя</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,47 +25,54 @@
             padding: 20px 50px; background-color: var(--surface);
             border-bottom: 2px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-
         .brand { font-size: 28px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
 
         .auth-buttons button {
             background: transparent; color: var(--text-main); border: 1px solid var(--gold);
             padding: 8px 20px; margin-left: 10px; cursor: pointer; transition: all 0.3s; border-radius: 3px;
         }
-
         .auth-buttons button:hover, .btn-primary { background: var(--primary); border-color: var(--primary); color: white; }
         .btn-primary { padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; }
 
         main { padding: 40px 50px; max-width: 1200px; margin: 0 auto; }
 
-        .search-bar {
-            width: 100%; padding: 15px; margin-bottom: 30px;
-            background: var(--surface); border: 1px solid #333;
-            color: white; border-radius: 5px; font-size: 16px;
-        }
+        .search-bar { width: 100%; padding: 15px; margin-bottom: 30px; background: var(--surface); border: 1px solid #333; color: white; border-radius: 5px; font-size: 16px; }
 
+        /* Карточки граждан */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-
-        .card {
-            background: var(--surface); border: 1px solid #2a2a2a;
-            border-radius: 8px; overflow: hidden; position: relative;
-        }
+        .card { background: var(--surface); border: 1px solid #2a2a2a; border-radius: 8px; overflow: hidden; position: relative; }
         .card img { width: 100%; height: 250px; object-fit: cover; border-bottom: 2px solid var(--primary); }
         .card-info { padding: 15px; }
-        .card-info h3 { color: var(--gold); }
-
-        /* Админские элементы */
-        #admin-section { display: none; margin-bottom: 50px; padding: 25px; border: 1px solid var(--gold); background: #151515; border-radius: 8px; }
-        .admin-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-bottom: 30px; }
-        .admin-form input { padding: 10px; background: #000; border: 1px solid #444; color: white; }
+        .card-info h3 { color: var(--gold); margin-bottom: 5px; }
+        .citizen-status { display: flex; align-items: center; font-size: 14px; margin-top: 5px; font-weight: bold;}
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
         
-        .request-card { background: #222; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--gold); }
-        .btn-delete { background: var(--danger); color: white; border: none; padding: 5px 10px; cursor: pointer; margin-top: 10px; width: 100%; }
+        .admin-controls { margin-top: 15px; display: flex; gap: 5px; border-top: 1px solid #333; padding-top: 10px;}
+        .admin-controls button { flex: 1; padding: 6px; font-size: 12px; cursor: pointer; border: none; border-radius: 3px;}
+        .btn-edit { background: #2980b9; color: white; }
+        .btn-delete { background: var(--danger); color: white; }
         .btn-approve { background: #27ae60; color: white; border: none; padding: 8px 15px; cursor: pointer; }
 
+        /* Админ панель и Вкладки */
+        #admin-section { display: none; margin-bottom: 50px; padding: 25px; border: 1px solid var(--gold); background: #111; border-radius: 8px; }
+        .admin-tabs { display: flex; gap: 20px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .admin-tabs button { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; font-family: 'Cinzel', serif; transition: 0.3s; }
+        .admin-tabs button.active { color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 5px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .admin-form { display: flex; gap: 10px; margin-bottom: 20px; }
+        .admin-form input, .admin-form textarea { flex: 1; padding: 10px; background: #000; border: 1px solid #444; color: white; border-radius: 3px;}
+        
+        /* Списки в админке */
+        .list-item { background: #222; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--gold); }
+        .list-info span { display: block; font-size: 13px; color: var(--text-muted); }
+
+        /* Модалки */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--surface); padding: 30px; width: 400px; border: 1px solid var(--gold); border-radius: 8px; }
-        .modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #444; color: white; }
+        .modal-content { background: var(--surface); padding: 30px; width: 400px; border: 1px solid var(--gold); border-radius: 8px; max-height: 90vh; overflow-y: auto;}
+        .modal-content.large { width: 800px; }
+        .modal-content input, .modal-content textarea { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #444; color: white; }
     </style>
 </head>
 <body>
@@ -84,21 +91,62 @@
 
     <main>
         <div id="admin-section">
-            <h2 style="color: var(--gold); margin-bottom: 20px;">Панель Управления Империей</h2>
+            <h2 style="color: var(--gold); margin-bottom: 20px;">Имперская Канцелярия</h2>
             
-            <h3>Быстрое добавление гражданина</h3>
-            <div class="admin-form">
-                <input type="text" id="manual-name" placeholder="Имя">
-                <input type="text" id="manual-id" placeholder="ID Код">
-                <input type="text" id="manual-photo" placeholder="Ссылка на фото (URL)">
-                <button class="btn-primary" onclick="manualAdd()">Добавить</button>
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchTab('tab-citizens', this)">Граждане</button>
+                <button class="tab-btn" onclick="switchTab('tab-bank', this)">Банк</button>
+                <button class="tab-btn" onclick="switchTab('tab-docs', this)">Архив</button>
+                <button class="tab-btn" onclick="switchTab('tab-admins', this)">Власть</button>
             </div>
 
-            <h3>Заявки на вступление</h3>
-            <div id="requests-list" style="margin-bottom: 30px;"></div>
+            <div id="tab-citizens" class="tab-content active">
+                <h3>Заявки на вступление</h3>
+                <div id="requests-list" style="margin-bottom: 30px;"></div>
+                <h3>Быстрое добавление</h3>
+                <div class="admin-form">
+                    <input type="text" id="manual-name" placeholder="Имя">
+                    <input type="text" id="manual-id" placeholder="ID Код">
+                    <input type="text" id="manual-photo" placeholder="Ссылка на фото">
+                    <button class="btn-primary" onclick="manualAdd()">Добавить</button>
+                </div>
+            </div>
+
+            <div id="tab-bank" class="tab-content">
+                <h3>Выдать долг</h3>
+                <div class="admin-form">
+                    <input type="text" id="bank-name" placeholder="Имя должника">
+                    <input type="number" id="bank-amount" placeholder="Сумма">
+                    <input type="text" id="bank-reason" placeholder="Причина">
+                    <button class="btn-primary" onclick="addDebt()">Записать</button>
+                </div>
+                <h3>Список должников</h3>
+                <div id="debts-list"></div>
+            </div>
+
+            <div id="tab-docs" class="tab-content">
+                <h3>Новый документ</h3>
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="doc-title" placeholder="Название документа" style="width: 100%; padding: 10px; margin-bottom: 10px; background: #000; border: 1px solid #444; color: white;">
+                    <textarea id="doc-content" rows="6" placeholder="Текст документа..." style="width: 100%; padding: 10px; background: #000; border: 1px solid #444; color: white;"></textarea>
+                    <button class="btn-primary" onclick="addDocument()" style="margin-top: 10px;">Сохранить документ</button>
+                </div>
+                <h3>Архив</h3>
+                <div id="docs-list"></div>
+            </div>
+
+            <div id="tab-admins" class="tab-content">
+                <p style="color: var(--text-muted); margin-bottom: 15px;">Укажите никнейм игрока, чтобы дать ему доступ к этой панели.</p>
+                <div class="admin-form">
+                    <input type="text" id="admin-username" placeholder="Никнейм игрока">
+                    <button class="btn-primary" onclick="grantAdmin()">Назначить админом</button>
+                </div>
+                <h3>Список администраторов</h3>
+                <div id="admins-list"></div>
+            </div>
         </div>
 
-        <input type="text" id="search" class="search-bar" placeholder="Поиск по имени или номеру..." onkeyup="filter()">
+        <input type="text" id="search" class="search-bar" placeholder="Поиск по империи..." onkeyup="filter()">
         <h2 style="margin-bottom: 20px;">Реестр Жителей</h2>
         <div class="grid" id="main-grid"></div>
     </main>
@@ -109,7 +157,7 @@
             <input type="text" id="log-user" placeholder="Никнейм">
             <input type="password" id="log-pass" placeholder="Пароль">
             <button class="btn-primary" style="width:100%" onclick="login()">Войти</button>
-            <button onclick="closeModal('login-modal')" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Отмена</button>
+            <button onclick="closeModal('login-modal')" style="background:none; border:none; color:gray; margin-top:10px; width:100%; cursor:pointer;">Отмена</button>
         </div>
     </div>
 
@@ -119,16 +167,39 @@
             <input type="text" id="reg-user" placeholder="Никнейм">
             <input type="text" id="reg-id" placeholder="ID Код">
             <input type="password" id="reg-pass" placeholder="Пароль">
+            <p style="font-size: 12px; color: gray; margin-bottom: 5px;">Фото профиля:</p>
             <input type="file" id="reg-file">
             <button class="btn-primary" style="width:100%" onclick="register()">Отправить заявку</button>
-            <button onclick="closeModal('register-modal')" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Отмена</button>
+            <button onclick="closeModal('register-modal')" style="background:none; border:none; color:gray; margin-top:10px; width:100%; cursor:pointer;">Отмена</button>
+        </div>
+    </div>
+
+    <div id="title-modal" class="modal">
+        <div class="modal-content">
+            <h2>Выдать титул/статус</h2>
+            <input type="hidden" id="title-target-id">
+            <input type="text" id="title-text" placeholder="Текст (например: В розыске)">
+            <p style="font-size: 12px; color: gray; margin-bottom: 5px;">Цвет индикатора:</p>
+            <input type="color" id="title-color" value="#c0392b" style="height: 40px; cursor: pointer;">
+            <button class="btn-primary" style="width:100%; margin-top: 15px;" onclick="saveTitle()">Сохранить</button>
+            <button class="btn-delete" style="width:100%; margin-top: 10px; border:none; padding:10px; cursor:pointer;" onclick="clearTitle()">Очистить титул</button>
+            <button onclick="closeModal('title-modal')" style="background:none; border:none; color:gray; margin-top:10px; width:100%; cursor:pointer;">Отмена</button>
+        </div>
+    </div>
+
+    <div id="read-doc-modal" class="modal">
+        <div class="modal-content large">
+            <h2 id="read-doc-title" style="color: var(--gold);"></h2>
+            <p id="read-doc-meta" style="color: gray; font-size: 12px; margin-bottom: 20px;"></p>
+            <div id="read-doc-text" style="line-height: 1.6; white-space: pre-wrap; margin-bottom: 20px;"></div>
+            <button class="btn-primary" style="width:100%" onclick="closeModal('read-doc-modal')">Закрыть</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -137,8 +208,7 @@
             projectId: "ssss-e4774",
             storageBucket: "ssss-e4774.firebasestorage.app",
             messagingSenderId: "790324813183",
-            appId: "1:790324813183:web:59e97ab75d5b8089d2ce4a",
-            measurementId: "G-07H7PGDLSJ"
+            appId: "1:790324813183:web:59e97ab75d5b8089d2ce4a"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -147,19 +217,26 @@
         const storage = getStorage(app);
 
         let allCitizens = [];
-        const getEmail = (u) => `${u.toLowerCase()}@empire.local`;
+        let adminList = ['1mm']; // Базовый супер-админ
+        let currentUser = null;
 
+        const getEmail = (u) => `${u.toLowerCase()}@empire.local`;
         window.openModal = (id) => document.getElementById(id).style.display = 'flex';
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-        // Авторизация
-        window.login = async () => {
-            try {
-                await signInWithEmailAndPassword(auth, getEmail(document.getElementById('log-user').value), document.getElementById('log-pass').value);
-                closeModal('login-modal');
-            } catch (e) { alert("Ошибка входа!"); }
+        // Логика вкладок
+        window.switchTab = (tabId, btnElement) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
         };
 
+        // --- АВТОРИЗАЦИЯ ---
+        window.login = async () => {
+            try { await signInWithEmailAndPassword(auth, getEmail(document.getElementById('log-user').value), document.getElementById('log-pass').value); closeModal('login-modal'); } 
+            catch (e) { alert("Ошибка входа! Проверьте данные."); }
+        };
         window.logout = () => signOut(auth);
 
         window.register = async () => {
@@ -170,62 +247,176 @@
 
             if (user.toLowerCase() === '1mm') {
                 await createUserWithEmailAndPassword(auth, getEmail(user), pass);
-                alert("Админ создан!"); closeModal('register-modal'); return;
+                alert("Супер-Админ создан!"); closeModal('register-modal'); return;
             }
 
             const sRef = ref(storage, `pics/${Date.now()}`);
             await uploadBytes(sRef, file);
             const url = await getDownloadURL(sRef);
-
             await addDoc(collection(db, "pending_requests"), { name: user, idCode: id, photoUrl: url });
-            alert("Заявка ушла!"); closeModal('register-modal');
+            alert("Заявка отправлена в канцелярию!"); closeModal('register-modal');
         };
 
-        // Админские действия
+        // --- ПРОВЕРКА РОЛЕЙ ---
+        const checkAccess = () => {
+            if(!currentUser) {
+                window.isCurrentAdmin = false;
+                document.getElementById('admin-section').style.display = 'none';
+                renderMain(); 
+                renderDocs(); // Обновляем документы при выходе
+                return;
+            }
+            const username = currentUser.email.split('@')[0];
+            window.isCurrentAdmin = adminList.includes(username);
+            document.getElementById('admin-section').style.display = window.isCurrentAdmin ? 'block' : 'none';
+            renderMain();
+            renderDocs(); // Обновляем документы при проверке прав
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            document.getElementById('auth-ui').style.display = user ? 'none' : 'flex';
+            document.getElementById('user-ui').style.display = user ? 'flex' : 'none';
+            if(user) document.getElementById('user-greeting').innerText = user.email.split('@')[0];
+            checkAccess();
+        });
+
+        // Загрузка админов из базы
+        onSnapshot(collection(db, "admins"), (s) => {
+            adminList = ['1mm', ...s.docs.map(d => d.data().username.toLowerCase())];
+            checkAccess();
+            const list = document.getElementById('admins-list');
+            list.innerHTML = adminList.map(a => `
+                <div class="list-item">
+                    <strong>${a}</strong>
+                    ${a !== '1mm' ? `<button class="btn-delete" onclick="removeAdmin('${a}')" style="padding: 5px; border:none; cursor:pointer;">Забрать права</button>` : `<span style="color:gold; font-size:12px;">Супер-админ</span>`}
+                </div>
+            `).join('');
+        });
+
+        // --- АДМИНСКИЕ ФУНКЦИИ ---
+        // 1. Граждане и заявки
         window.manualAdd = async () => {
-            const name = document.getElementById('manual-name').value;
-            const id = document.getElementById('manual-id').value;
-            const url = document.getElementById('manual-photo').value;
-            await addDoc(collection(db, "citizens"), { name, idCode: id, photoUrl: url });
-            alert("Добавлен!");
+            await addDoc(collection(db, "citizens"), { name: document.getElementById('manual-name').value, idCode: document.getElementById('manual-id').value, photoUrl: document.getElementById('manual-photo').value });
+            alert("Гражданин добавлен!");
         };
-
         window.approve = async (dId, name, idCode, photoUrl) => {
             await addDoc(collection(db, "citizens"), { name, idCode, photoUrl });
             await deleteDoc(doc(db, "pending_requests", dId));
         };
+        window.removeCitizen = async (id) => { if(confirm("Удалить жителя?")) await deleteDoc(doc(db, "citizens", id)); };
 
-        window.removeCitizen = async (id) => {
-            if(confirm("Удалить жителя?")) await deleteDoc(doc(db, "citizens", id));
+        // 2. Титулы
+        window.openTitleModal = (id) => { document.getElementById('title-target-id').value = id; openModal('title-modal'); };
+        window.saveTitle = async () => {
+            const id = document.getElementById('title-target-id').value;
+            const text = document.getElementById('title-text').value;
+            const color = document.getElementById('title-color').value;
+            await updateDoc(doc(db, "citizens", id), { title: text, titleColor: color });
+            closeModal('title-modal');
+        };
+        window.clearTitle = async () => {
+            const id = document.getElementById('title-target-id').value;
+            await updateDoc(doc(db, "citizens", id), { title: "", titleColor: "" });
+            closeModal('title-modal');
         };
 
-        // Слушатели данных
-        onAuthStateChanged(auth, (user) => {
-            const is1mm = user && user.email.startsWith('1mm@');
-            document.getElementById('auth-ui').style.display = user ? 'none' : 'flex';
-            document.getElementById('user-ui').style.display = user ? 'flex' : 'none';
-            document.getElementById('admin-section').style.display = is1mm ? 'block' : 'none';
-            if(user) document.getElementById('user-greeting').innerText = user.email.split('@')[0];
-            
-            window.isCurrentAdmin = is1mm;
-            renderMain(); 
-        });
+        // 3. Банк
+        window.addDebt = async () => {
+            await addDoc(collection(db, "debts"), { 
+                name: document.getElementById('bank-name').value, 
+                amount: document.getElementById('bank-amount').value, 
+                reason: document.getElementById('bank-reason').value,
+                date: new Date().toLocaleDateString()
+            });
+            document.getElementById('bank-name').value = ''; document.getElementById('bank-amount').value = ''; document.getElementById('bank-reason').value = '';
+        };
+        window.deleteDebt = async (id) => { if(confirm("Долг погашен/удален?")) await deleteDoc(doc(db, "debts", id)); };
 
+        // 4. Документы
+        window.addDocument = async () => {
+            await addDoc(collection(db, "documents"), {
+                title: document.getElementById('doc-title').value,
+                content: document.getElementById('doc-content').value,
+                date: new Date().toLocaleDateString(),
+                author: currentUser.email.split('@')[0]
+            });
+            document.getElementById('doc-title').value = ''; document.getElementById('doc-content').value = '';
+            alert("Документ сохранен!");
+        };
+        window.viewDoc = async (id) => {
+            const d = docData.find(x => x.id === id);
+            document.getElementById('read-doc-title').innerText = d.title;
+            document.getElementById('read-doc-meta').innerText = `Автор: ${d.author} | Дата: ${d.date}`;
+            document.getElementById('read-doc-text').innerText = d.content;
+            openModal('read-doc-modal');
+        };
+        window.deleteDocItem = async (id) => { if(confirm("Удалить документ?")) await deleteDoc(doc(db, "documents", id)); };
+
+        // 5. Админы
+        window.grantAdmin = async () => {
+            const name = document.getElementById('admin-username').value.toLowerCase();
+            if(!name) return;
+            await addDoc(collection(db, "admins"), { username: name });
+            document.getElementById('admin-username').value = '';
+        };
+        window.removeAdmin = async (name) => {
+            const snap = await getDocs(collection(db, "admins"));
+            snap.forEach(d => { if(d.data().username === name) deleteDoc(doc(db, "admins", d.id)); });
+        };
+
+        // --- СЛУШАТЕЛИ БАЗЫ (ОБНОВЛЕНИЕ В РЕАЛЬНОМ ВРЕМЕНИ) ---
         onSnapshot(collection(db, "citizens"), (s) => {
-            allCitizens = s.docs.map(d => ({id: d.id, ...d.data()}));
-            renderMain();
+            allCitizens = s.docs.map(d => ({id: d.id, ...d.data()})); renderMain();
         });
 
         onSnapshot(collection(db, "pending_requests"), (s) => {
-            const list = document.getElementById('requests-list');
-            list.innerHTML = s.docs.map(d => `
-                <div class="request-card">
-                    <span>${d.data().name} (${d.data().idCode})</span>
+            document.getElementById('requests-list').innerHTML = s.docs.map(d => `
+                <div class="list-item">
+                    <span><strong>${d.data().name}</strong> (ID: ${d.data().idCode})</span>
                     <button class="btn-approve" onclick="approve('${d.id}','${d.data().name}','${d.data().idCode}','${d.data().photoUrl}')">Одобрить</button>
                 </div>
             `).join('');
         });
 
+        onSnapshot(collection(db, "debts"), (s) => {
+            document.getElementById('debts-list').innerHTML = s.docs.map(d => `
+                <div class="list-item">
+                    <div class="list-info">
+                        <strong>${d.data().name}</strong> — <span style="color:var(--danger); display:inline;">${d.data().amount} валюты</span>
+                        <span>Причина: ${d.data().reason} (${d.data().date})</span>
+                    </div>
+                    <button class="btn-delete" style="padding: 5px; border:none; cursor:pointer;" onclick="deleteDebt('${d.id}')">Погашен</button>
+                </div>
+            `).join('');
+        });
+
+        let docData = [];
+        onSnapshot(collection(db, "documents"), (s) => {
+            docData = s.docs.map(d => ({id: d.id, ...d.data()}));
+            renderDocs(); // Вызываем рендер отдельно для проверки прав
+        });
+
+        // Функция рендера документов с проверкой прав
+        function renderDocs() {
+            // Если пользователь не админ, даже не генерируем HTML списка
+            if (!window.isCurrentAdmin) {
+                document.getElementById('docs-list').innerHTML = '';
+                return;
+            }
+            
+            document.getElementById('docs-list').innerHTML = docData.map(d => `
+                <div class="list-item">
+                    <div class="list-info"><strong>${d.title}</strong><span>Автор: ${d.author} (${d.date})</span></div>
+                    <div>
+                        <button class="btn-approve" style="background:#2980b9;" onclick="viewDoc('${d.id}')">Читать</button>
+                        <button class="btn-delete" style="padding:8px 15px; border:none; cursor:pointer;" onclick="deleteDocItem('${d.id}')">Удалить</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- РЕНДЕР ГРАЖДАН ---
         function renderMain(data = allCitizens) {
             const grid = document.getElementById('main-grid');
             grid.innerHTML = data.map(c => `
@@ -233,8 +424,15 @@
                     <img src="${c.photoUrl}">
                     <div class="card-info">
                         <h3>${c.name}</h3>
-                        <p>ID: ${c.idCode}</p>
-                        ${window.isCurrentAdmin ? `<button class="btn-delete" onclick="removeCitizen('${c.id}')">Удалить</button>` : ''}
+                        <p style="color:var(--text-muted); font-size:13px;">ID: ${c.idCode}</p>
+                        ${c.title ? `<div class="citizen-status"><span class="status-dot" style="background-color: ${c.titleColor}"></span> ${c.title}</div>` : ''}
+                        
+                        ${window.isCurrentAdmin ? `
+                            <div class="admin-controls">
+                                <button class="btn-edit" onclick="openTitleModal('${c.id}')">Титул</button>
+                                <button class="btn-delete" onclick="removeCitizen('${c.id}')">Удалить</button>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `).join('');
